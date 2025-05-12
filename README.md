@@ -93,6 +93,40 @@ except KeyboardInterrupt:
 - Python API for integration into your own scripts
 - Minimal resource usage
 
+## Development
+
+### Setup Development Environment
+
+```bash
+# Clone the repository
+git clone https://github.com/Lanznx/lazy-b.git
+cd lazy-b
+
+# Setup development environment
+make dev-setup
+
+# Install in development mode
+make install
+```
+
+### Releasing New Versions
+
+To release a new version:
+
+```bash
+# Update version, create commit and tag
+make release  # This will prompt for the new version
+
+# Push changes and tag to GitHub
+git push origin main
+git push origin v<version>  # e.g., git push origin v0.2.0
+```
+
+Pushing a tag will automatically trigger the release workflow, which will:
+1. Build the package
+2. Create a GitHub release
+3. Publish to PyPI
+
 ## Requirements
 
 - Python 3.8 or higher

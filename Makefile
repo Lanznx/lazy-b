@@ -1,4 +1,4 @@
-.PHONY: clean lint test build install all
+.PHONY: clean lint test build install all release
 
 all: clean lint test build
 
@@ -24,3 +24,8 @@ install:
 dev-setup:
 	pip install -U pip
 	pip install -e ".[dev]" 
+
+release:
+	@echo "Current version: $$(grep -o 'version = "[^"]*"' pyproject.toml | cut -d'"' -f2)"
+	@read -p "Enter new version (e.g., 0.2.0): " version; \
+	python scripts/update_version.py $$version 
