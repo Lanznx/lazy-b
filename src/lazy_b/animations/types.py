@@ -1,8 +1,8 @@
 """Type definitions for ASCII Animation System."""
 
 from dataclasses import dataclass
-from typing import List, Optional, Protocol, Union
 from pathlib import Path
+from typing import List, Optional, Protocol, Union
 
 
 @dataclass(frozen=True)
@@ -63,7 +63,7 @@ class AnimationConfig:
 
     default_frame_rate: float = 0.2
     animation_root_dir: Path = Path("animations")
-    supported_extensions: List[str] = None
+    supported_extensions: Optional[List[str]] = None
 
     def __post_init__(self) -> None:
         if self.supported_extensions is None:

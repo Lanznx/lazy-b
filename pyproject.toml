@@ -42,6 +42,8 @@ dev = [
     "ruff>=0.0.200",
     "mypy>=0.950",
     "black>=22.0.0",
+    "build>=0.8.0",
+    "twine>=4.0.0",
 ]
 macos = [
     "pyobjc-core>=7.0.0",
@@ -55,7 +57,7 @@ macos = [
 "Source Code" = "https://github.com/Lanznx/lazy-b"
 
 [project.scripts]
-lazy-b = "lazy_b.cli:main"
+lazy-b = "src.lazy_b.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/lazy_b"]
@@ -76,6 +78,8 @@ target-version = ["py38"]
 [tool.ruff]
 target-version = "py38"
 line-length = 88
+
+[tool.ruff.lint]
 select = ["E", "F", "B", "I"]
 ignore = []
 

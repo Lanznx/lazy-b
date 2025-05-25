@@ -1,15 +1,15 @@
 """Interactive menu system for animation selection."""
 
-import sys
 import os
-import time
-import threading
 import platform
-from typing import List, Optional
-
-from .types import AnimationSequence, AnimationConfig
-from .repository import FileSystemAnimationRepository
+import sys
+import threading
+import time
 from pathlib import Path
+from typing import Any, List, Optional
+
+from .repository import FileSystemAnimationRepository
+from .types import AnimationConfig, AnimationSequence
 
 
 class InteractiveMenu:
@@ -27,11 +27,13 @@ class InteractiveMenu:
         """Get a single character from stdin."""
         try:
             if platform.system() == "Windows":
-                import msvcrt
+                import msvcrt  # type: ignore
 
-                char = msvcrt.getch().decode("utf-8")
+                char_bytes: Any = msvcrt.getch()  # type: ignore
+                char = str(char_bytes.decode("utf-8"))
                 if char == "\xe0":  # Special key prefix on Windows
-                    char += msvcrt.getch().decode("utf-8")
+                    char_bytes = msvcrt.getch()  # type: ignore
+                    char += str(char_bytes.decode("utf-8"))
                 return char
             else:
                 import termios
@@ -49,7 +51,8 @@ class InteractiveMenu:
                     termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
         except Exception:
             # Fallback to regular input
-            return input()
+            user_input = input()
+            return user_input if user_input else ""
 
     def _clear_screen(self) -> None:
         """Clear the terminal screen."""
@@ -83,7 +86,7 @@ class InteractiveMenu:
         self._stop_current_preview()
         self.stop_preview = False
 
-        def preview_loop():
+        def preview_loop() -> None:
             frame_index = 0
             while not self.stop_preview:
                 if frame_index >= len(animation.frames):

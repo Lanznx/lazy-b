@@ -1,13 +1,12 @@
 """Integrated runner for LazyB with animation support."""
 
 import threading
-import time
-from typing import Optional
 from pathlib import Path
+from typing import Optional
 
-from .main import LazyB
 from .animations.core import AnimationEngine
-from .animations.types import AnimationConfig
+from .animations.types import AnimationConfig, AnimationSequence
+from .main import LazyB
 
 
 class IntegratedLazyB:
@@ -51,12 +50,12 @@ class IntegratedLazyB:
         )
         self._start_with_animation_sequence(selected_animation)
 
-    def _start_with_animation_sequence(self, animation) -> None:
+    def _start_with_animation_sequence(self, animation: AnimationSequence) -> None:
         """Start keeping active with provided animation sequence."""
         self._is_running = True
 
         # Start animation in separate thread
-        def run_animation():
+        def run_animation() -> None:
             while self._is_running:
                 try:
                     result = self.animation_engine.play_animation(animation, loop=False)
@@ -77,7 +76,7 @@ class IntegratedLazyB:
 
         self.lazy_b.start(callback=self.print_status)
         self.print_status(
-            f"\n✅ LazyB is now active! Animation and key presses started."
+            "\n✅ LazyB is now active! Animation and key presses started."
         )
         self.print_status(f"📅 Next Shift press in {self.interval//60} minutes...")
 
@@ -95,7 +94,7 @@ class IntegratedLazyB:
         self._is_running = True
 
         # Start animation in separate thread
-        def run_animation():
+        def run_animation() -> None:
             while self._is_running:
                 try:
                     result = self.animation_engine.play_animation(animation, loop=False)
@@ -116,7 +115,7 @@ class IntegratedLazyB:
 
         self.lazy_b.start(callback=self.print_status)
         self.print_status(
-            f"\n✅ LazyB is now active! Animation and key presses started."
+            "\n✅ LazyB is now active! Animation and key presses started."
         )
         self.print_status(f"📅 Next Shift press in {self.interval//60} minutes...")
 
@@ -128,7 +127,7 @@ class IntegratedLazyB:
         self.print_status("🛑 Press Ctrl+C to stop")
 
         self.lazy_b.start(callback=self.print_status)
-        self.print_status(f"\n✅ LazyB is now active! (no animation)")
+        self.print_status("\n✅ LazyB is now active! (no animation)")
         self.print_status(f"📅 Next Shift press in {self.interval//60} minutes...")
 
     def stop(self) -> None:
@@ -152,5 +151,5 @@ class IntegratedLazyB:
 
         self.print_status("Available animations:")
         for i, directory in enumerate(animation_dirs, 1):
-            animation_name = directory.split("/")[-1]
+            animation_name = directory.name
             self.print_status(f"  {i}. {animation_name}")

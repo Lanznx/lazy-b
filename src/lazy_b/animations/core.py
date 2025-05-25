@@ -1,20 +1,19 @@
 """Core animation engine - Domain Layer."""
 
-import os
-import time
-import platform
-from typing import List, Optional
 import logging
+import os
+import platform
+import time
+from typing import List, Optional
 
+from .repository import FileSystemAnimationRepository
 from .types import (
-    AnimationSequence,
-    AnimationFrame,
     AnimationConfig,
+    AnimationFrame,
     AnimationRenderer,
+    AnimationSequence,
     PlaybackResult,
 )
-from .repository import FileSystemAnimationRepository
-
 
 logger = logging.getLogger(__name__)
 

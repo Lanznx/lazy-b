@@ -1,18 +1,16 @@
 """Repository layer for animation file system operations."""
 
+import logging
 import re
 from pathlib import Path
-from typing import List, Optional, Dict, Tuple
-import logging
+from typing import List, Optional, Tuple
 
 from .types import (
-    AnimationMetadata,
-    AnimationFrame,
-    AnimationSequence,
     AnimationConfig,
-    AnimationLoader,
+    AnimationFrame,
+    AnimationMetadata,
+    AnimationSequence,
 )
-
 
 logger = logging.getLogger(__name__)
 
@@ -105,7 +103,7 @@ class FileSystemAnimationRepository:
                 frames.append(frame)
             except UnicodeDecodeError as e:
                 logger.error(f"Failed to read frame file {file_path}: {e}")
-                raise ValueError(f"Invalid encoding in frame file {file_path}")
+                raise ValueError(f"Invalid encoding in frame file {file_path}") from e
 
         return frames
 
