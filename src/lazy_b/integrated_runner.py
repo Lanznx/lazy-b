@@ -1,7 +1,6 @@
 """Integrated runner for LazyB with animation support."""
 
 import threading
-from pathlib import Path
 from typing import Optional
 
 from .animations.core import AnimationEngine
@@ -18,7 +17,7 @@ class IntegratedLazyB:
         self.lazy_b = LazyB(interval=interval)
 
         # Setup animation system
-        config = AnimationConfig(animation_root_dir=Path("animations"))
+        config = AnimationConfig()
         self.animation_engine = AnimationEngine(config)
 
         self._animation_thread: Optional[threading.Thread] = None

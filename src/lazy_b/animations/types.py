@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional, Protocol, Union
 
+from .utils import get_default_animations_path
+
 
 @dataclass(frozen=True)
 class AnimationMetadata:
@@ -62,10 +64,14 @@ class AnimationConfig:
     """Configuration for animation playback."""
 
     default_frame_rate: float = 0.2
-    animation_root_dir: Path = Path("animations")
+    animation_root_dir: Optional[Path] = None
     supported_extensions: Optional[List[str]] = None
 
     def __post_init__(self) -> None:
+        if self.animation_root_dir is None:
+            object.__setattr__(
+                self, "animation_root_dir", get_default_animations_path()
+            )
         if self.supported_extensions is None:
             object.__setattr__(self, "supported_extensions", [".txt"])
 

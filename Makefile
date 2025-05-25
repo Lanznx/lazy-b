@@ -40,7 +40,7 @@ version-bump:
 		exit 1; \
 	fi
 	@echo "📝 Updating version to $(VERSION)..."
-	@sed -i.bak 's/version = "[^"]*"/version = "$(VERSION)"/' pyproject.toml
+	@sed -i.bak '/^\[project\]/,/^\[/ s/^version = "[^"]*"/version = "$(VERSION)"/' pyproject.toml
 	@sed -i.bak 's/__version__ = "[^"]*"/__version__ = "$(VERSION)"/' src/lazy_b/__init__.py
 	@rm -f pyproject.toml.bak src/lazy_b/__init__.py.bak
 	@git add pyproject.toml src/lazy_b/__init__.py

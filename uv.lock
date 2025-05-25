@@ -701,7 +701,7 @@ wheels = [
 
 [[package]]
 name = "lazy-b"
-version = "0.1.7"
+version = "0.1.9"
 source = { editable = "." }
 dependencies = [
     { name = "pyautogui" },

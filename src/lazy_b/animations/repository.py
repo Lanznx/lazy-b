@@ -26,7 +26,7 @@ class FileSystemAnimationRepository:
         """Discover all valid animation directories."""
         search_dir = root_dir or self._config.animation_root_dir
 
-        if not search_dir.exists():
+        if search_dir is None or not search_dir.exists():
             logger.warning(f"Animation directory {search_dir} does not exist")
             return []
 

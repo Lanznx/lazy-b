@@ -5,7 +5,6 @@ import platform
 import sys
 import threading
 import time
-from pathlib import Path
 from typing import Any, List, Optional
 
 from .repository import FileSystemAnimationRepository
@@ -189,5 +188,5 @@ def create_interactive_menu(
 ) -> InteractiveMenu:
     """Create and return an interactive menu instance."""
     if config is None:
-        config = AnimationConfig(animation_root_dir=Path("animations"))
+        config = AnimationConfig()
     return InteractiveMenu(config)
