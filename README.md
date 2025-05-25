@@ -12,11 +12,6 @@ pip install lazy-b
 
 # Using uv
 uv pip install lazy-b
-
-# For macOS users (to enable dock icon hiding)
-pip install "lazy-b[macos]"
-# or with uv
-uv pip install "lazy-b[macos]"
 ```
 
 ## Usage
@@ -31,12 +26,6 @@ lazy-b
 
 # Customize the interval (e.g., every 30 seconds)
 lazy-b --interval 30
-
-# Run in quiet mode (no console output)
-lazy-b --quiet
-
-# Run in foreground mode (shows dock icon - macOS only)
-lazy-b --foreground
 ```
 
 #### Platform-specific behavior
