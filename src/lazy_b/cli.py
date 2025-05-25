@@ -1,11 +1,9 @@
 import argparse
+import platform
 import signal
 import sys
 import time
-import platform
-from typing import NoReturn, List, Optional
-
-from .main import LazyB
+from typing import Any, List, Optional
 
 
 def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
@@ -37,19 +35,22 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
             "-f",
             "--foreground",
             action="store_true",
-            help="Run in foreground mode (by default, runs in background with no dock icon)",
+            help=(
+                "Run in foreground mode "
+                "(by default, runs in background with no dock icon)"
+            ),
         )
 
     return parser.parse_args(args)
 
 
-def hide_dock_icon():
+def hide_dock_icon() -> None:
     """Hide the dock icon on macOS."""
     if platform.system() != "Darwin":
         return
 
     try:
-        from AppKit import NSApplication
+        from AppKit import NSApplication  # type: ignore
 
         app = NSApplication.sharedApplication()
         # NSApplicationActivationPolicyAccessory = 1
@@ -59,7 +60,7 @@ def hide_dock_icon():
         pass
 
 
-def main(args: Optional[List[str]] = None) -> NoReturn:
+def main(args: Optional[List[str]] = None) -> None:
     """Main entry point for the CLI."""
     parsed_args = parse_args(args)
 
@@ -76,7 +77,7 @@ def main(args: Optional[List[str]] = None) -> NoReturn:
     if is_macos and hasattr(parsed_args, "foreground") and not parsed_args.foreground:
         hide_dock_icon()
 
-    def signal_handler(sig, frame) -> None:
+    def signal_handler(sig: Any, frame: Any) -> None:
         """Handle Ctrl+C to gracefully shut down."""
         if not parsed_args.quiet:
             print("\nShutting down LazyB...")
@@ -104,7 +105,8 @@ def main(args: Optional[List[str]] = None) -> NoReturn:
             print("Running in background mode. You can close this terminal window.")
         else:
             print(
-                f"Running on {os_name}. Keep this window open for the program to continue running."
+                f"Running on {os_name}. "
+                "Keep this window open for the program to continue running."
             )
 
         # Keep running until interrupted
@@ -117,8 +119,6 @@ def main(args: Optional[List[str]] = None) -> NoReturn:
         if not parsed_args.quiet:
             print(f"Error: {e}")
         sys.exit(1)
-
-    return sys.exit(0)
 
 
 if __name__ == "__main__":

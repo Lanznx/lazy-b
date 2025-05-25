@@ -1,7 +1,8 @@
-import time
 import threading
+import time
+from typing import Callable, Optional
+
 import pyautogui
-from typing import Optional, Callable
 
 
 class LazyB:
@@ -42,7 +43,8 @@ class LazyB:
         Start simulating key presses.
 
         Args:
-            callback: Optional function to call after each key press with a status message.
+            callback: Optional function to call after each key press
+                     with a status message.
         """
         if self._running:
             return
