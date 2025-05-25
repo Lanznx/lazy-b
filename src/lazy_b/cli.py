@@ -11,19 +11,25 @@ from .main import LazyB
 def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(
-        description="Keep Slack/Teams active by simulating shift key presses at regular intervals."
+        description="LazyB: Keep Slack/Teams active with optional ASCII animations."
     )
 
     parser.add_argument(
         "-i",
         "--interval",
         type=int,
-        default=1,
-        help="Interval between key presses in seconds (default: 1)",
+        default=180,
+        help="Interval between key presses in seconds (default: 180 = 3 minutes)",
     )
 
     parser.add_argument(
         "-q", "--quiet", action="store_true", help="Run in quiet mode (no output)"
+    )
+
+    parser.add_argument(
+        "--animation",
+        type=str,
+        help="Specify animation to use (skips interactive selection)",
     )
 
     if platform.system() == "Darwin":
@@ -57,46 +63,60 @@ def main(args: Optional[List[str]] = None) -> NoReturn:
     """Main entry point for the CLI."""
     parsed_args = parse_args(args)
 
+    from .integrated_runner import IntegratedLazyB
+
+    # Setup integrated runner
+    integrated_runner = IntegratedLazyB(
+        interval=parsed_args.interval, quiet=parsed_args.quiet
+    )
+
+    # Handle dock icon on macOS
     os_name = platform.system()
     is_macos = os_name == "Darwin"
-
     if is_macos and hasattr(parsed_args, "foreground") and not parsed_args.foreground:
         hide_dock_icon()
-
-    lazy_b = LazyB(interval=parsed_args.interval)
 
     def signal_handler(sig, frame) -> None:
         """Handle Ctrl+C to gracefully shut down."""
         if not parsed_args.quiet:
             print("\nShutting down LazyB...")
-        lazy_b.stop()
+        integrated_runner.stop()
         sys.exit(0)
 
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
 
-    def print_status(message: str) -> None:
-        """Print status messages if not in quiet mode."""
-        if not parsed_args.quiet:
-            print(message)
-
-    lazy_b.start(callback=print_status)
-
-    print_status(f"LazyB is keeping you active (press Ctrl+C to stop)")
-    print_status(f"Pressing Shift key every {parsed_args.interval} seconds")
-
-    if is_macos and hasattr(parsed_args, "foreground") and not parsed_args.foreground:
-        print("Running in background mode. You can close this terminal window.")
-    else:
-        print(
-            f"Running on {os_name}. Keep this window open for the program to continue running."
-        )
-
     try:
+        # Handle different modes
+        if parsed_args.animation:
+            # Use specified animation
+            integrated_runner.start_with_animation(parsed_args.animation)
+        else:
+            # Default: start with interactive animation selection menu
+            integrated_runner.start_with_animation_menu()
+
+        # Show platform-specific information
+        if (
+            is_macos
+            and hasattr(parsed_args, "foreground")
+            and not parsed_args.foreground
+        ):
+            print("Running in background mode. You can close this terminal window.")
+        else:
+            print(
+                f"Running on {os_name}. Keep this window open for the program to continue running."
+            )
+
+        # Keep running until interrupted
         while True:
             time.sleep(1)
+
     except KeyboardInterrupt:
         signal_handler(signal.SIGINT, None)
+    except Exception as e:
+        if not parsed_args.quiet:
+            print(f"Error: {e}")
+        sys.exit(1)
 
     return sys.exit(0)
 
