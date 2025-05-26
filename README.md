@@ -2,6 +2,9 @@
 
 Keep Slack, Microsoft Teams, or other similar applications from showing you as "away" or "inactive" by simulating key presses at regular intervals.
 
+![2025-05-2600 01 29-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/483c305b-411d-4bab-9f01-dd20c4329b49)
+
+
 ## Installation
 
 Install directly from PyPI using pip or uv:
