@@ -20,7 +20,8 @@ class FileSystemAnimationRepository:
 
     def __init__(self, config: AnimationConfig) -> None:
         self._config = config
-        self._frame_pattern = re.compile(r"^(\d+)_.*\.txt$")
+        # Support both formats: "001_description.txt" and "frame_1.txt"
+        self._frame_pattern = re.compile(r"^(?:(\d+)_.*|.*_(\d+))\.txt$")
 
     def discover_animations(self, root_dir: Optional[Path] = None) -> List[Path]:
         """Discover all valid animation directories."""
@@ -66,7 +67,8 @@ class FileSystemAnimationRepository:
         for file_path in directory.glob("*.txt"):
             match = self._frame_pattern.match(file_path.name)
             if match:
-                sequence_num = int(match.group(1))
+                # Extract sequence number from either group 1 or 2
+                sequence_num = int(match.group(1) or match.group(2))
                 frame_files.append((sequence_num, file_path))
 
         # Sort by sequence number

@@ -75,10 +75,93 @@ except KeyboardInterrupt:
     lazy.stop()
 ```
 
+## 🎬 Adding Custom Animations
+
+LazyB supports ASCII animations that play while keeping your status active. You can add your own custom animations to the system.
+
+### Animation File Structure
+
+Animations are stored in the `animations` directory, with each animation in its own subdirectory. Each frame should be saved as a separate `.txt` file with a numbered sequence.
+
+**Supported naming formats:**
+- `frame_1.txt`, `frame_2.txt`, `frame_3.txt`, ... (frame_NUMBER.txt)
+- `001_description.txt`, `002_description.txt`, `003_description.txt`, ... (NUMBER_description.txt)
+
+**Example structure:**
+```
+animations/
+├── my_cool_animation/
+│   ├── frame_1.txt
+│   ├── frame_2.txt
+│   └── frame_3.txt
+└── another_animation/
+    ├── 001_start.txt
+    ├── 002_middle.txt
+    └── 003_end.txt
+```
+
+### Creating Animations from Videos
+
+If you want to convert a video into ASCII animation, follow these steps:
+
+#### Step 1: Convert Video to ASCII Frames
+
+1. **Clone the ASCII Animator tool:**
+   ```bash
+   git clone https://github.com/bradysheridan/ascii-animator.git
+   cd ascii-animator
+   ```
+
+2. **Upload your video file** to the ASCII Animator and process it through their system.
+
+3. **Export the output** - you should get a `frames.js` file containing an array of ASCII frames.
+
+#### Step 2: Convert Frames to TXT Files
+
+1. **Place the `frames.js` file** in your LazyB `animations` directory.
+
+2. **Run the conversion script** (requires Node.js):
+   ```bash
+   # Install Node.js if not already installed
+   # Visit https://nodejs.org/ or use package manager
+   
+   cd animations
+   node convertFramesToTxt.js
+   ```
+
+3. **Follow the prompts** to name your animation directory (avoid spaces and special characters).
+
+4. **The script will create** a new directory with all frames converted to individual `.txt` files.
+
+#### Step 3: Test Your Animation
+
+1. **Run LazyB** and your new animation should appear in the selection menu:
+   ```bash
+   lazy-b
+   ```
+
+2. **Use arrow keys** to navigate and select your animation.
+
+### Animation Guidelines
+
+- **File naming**: Frames must be numbered sequentially starting from 1
+- **File format**: Plain text (`.txt`) files with UTF-8 encoding
+- **Frame size**: Recommended maximum 80 characters wide for terminal compatibility
+- **Frame rate**: Default is 0.2 seconds per frame (5 FPS), configurable
+- **Directory naming**: Use underscores instead of spaces, avoid special characters
+
+### Troubleshooting
+
+- **Animation not showing up?** Check that frame files follow the naming convention
+- **Frames out of order?** Ensure sequential numbering without gaps
+- **Display issues?** Verify files are UTF-8 encoded and frames aren't too wide
+
 ## Features
 
 - Prevents "away" or "inactive" status in messaging applications
-- Customizable interval between key presses (default: 1 second)
+- **🎬 ASCII Animation Support**: Display entertaining animations while keeping your status active
+- Interactive animation selection menu with live preview
+- Customizable interval between key presses (default: 3 minutes)
 - Simple command-line interface
 - Cross-platform: Works on macOS, Windows, and Linux
 - Background mode on macOS (no dock icon)
@@ -121,9 +204,14 @@ Pushing a tag will automatically trigger the release workflow, which will:
 
 ## Requirements
 
+### Runtime Requirements
 - Python 3.8 or higher
 - PyAutoGUI
 - PyObjC-Core (for macOS dock icon hiding, optional)
+
+### Animation Development Requirements (Optional)
+- Node.js (for running the frame conversion script)
+- Access to [ASCII Animator](https://github.com/bradysheridan/ascii-animator) for video-to-ASCII conversion
 
 ## License
 
