@@ -87,6 +87,7 @@ class InteractiveMenu:
 
         def preview_loop() -> None:
             frame_index = 0
+            max_lines_seen = 0
             while not self.stop_preview:
                 if frame_index >= len(animation.frames):
                     frame_index = 0
@@ -96,8 +97,17 @@ class InteractiveMenu:
                 # Calculate preview area position
                 preview_start_line = 6 + len(self.animations)
 
-                # Clear preview area more thoroughly - clear 15 lines
-                for i in range(15):
+                # Clean and display frame content
+                # Remove trailing whitespace and newlines
+                clean_content = frame.content.rstrip()
+                frame_lines = clean_content.split("\n") if clean_content else []
+                
+                # Track the maximum number of lines we've seen to clear properly
+                current_lines = len(frame_lines) + 1
+                max_lines_seen = max(max_lines_seen, current_lines)
+                
+                lines_to_clear = max(max_lines_seen + 5, 20)  # At least 20 lines
+                for i in range(lines_to_clear):
                     print(
                         f"\033[{preview_start_line + i};1H\033[2K", end=""
                     )  # Clear entire line
@@ -105,11 +115,6 @@ class InteractiveMenu:
                 # Position cursor and show title
                 print(f"\033[{preview_start_line};1H", end="")
                 print("Preview:")
-
-                # Clean and display frame content
-                # Remove trailing whitespace and newlines
-                clean_content = frame.content.rstrip()
-                frame_lines = clean_content.split("\n") if clean_content else []
 
                 # Display each line, ensuring we clear any potential overlap
                 for i, line in enumerate(frame_lines):
